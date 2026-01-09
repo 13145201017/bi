@@ -3,12 +3,225 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>个人自我介绍</title>
-    <!-- 引入单独的CSS文件 -->
+    <title>个人自我介绍 </title>
+    <!-- 保留原有CSS引入 -->
     <link rel="stylesheet" href="geren.css">
     <link rel="stylesheet" href="luyou.css">
+    <style>
+        /* 新增：全局基础样式 + 背景渐变动画 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        html, body {
+            min-height: 100vh;
+            overflow-x: hidden;
+            font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+            /* 自然系渐变背景+动画 */
+            background: linear-gradient(120deg, #004d40, #26a69a, #81c784, #ffb74d);
+            background-size: 400% 400%;
+            animation: bgAnimate 20s ease infinite;
+            position: relative;
+        }
+        /* 背景渐变动画 */
+        @keyframes bgAnimate {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        /* 新增：粒子画布（底层不遮挡内容） */
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none; /* 不影响原有内容交互 */
+        }
+        /* 新增：Logo样式 + 动画 */
+        .nature-logo {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #43a047, #81c784);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 20px;
+            box-shadow: 0 0 30px rgba(67, 160, 71, 0.6);
+            animation: logoFloat 4s ease-in-out infinite alternate;
+        }
+        .nature-logo i {
+            font-size: 50px;
+            color: white;
+        }
+        @keyframes logoFloat {
+            from { transform: translateY(0); }
+            to { transform: translateY(-8px); }
+        }
+        /* 新增：文字动画（原有标题/内容） */
+        .header-title {
+            opacity: 0;
+            transform: translateY(15px);
+            animation: titleFade 1.2s ease forwards 0.3s;
+        }
+        .header-subtitle {
+            opacity: 0;
+            transform: translateY(15px);
+            animation: titleFade 1.2s ease forwards 0.6s;
+        }
+        .card {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: cardFade 1.5s ease forwards;
+            /* 核心修改：增强卡片通透感 */
+            background-color: rgba(255, 255, 255, 0.2) !important; /* 降低不透明度到0.2 */
+            backdrop-filter: blur(10px) !important; /* 增加高斯模糊，增强通透感 */
+            border: 1px solid rgba(255, 255, 255, 0.3) !important; /* 增加半透明白色边框 */
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08) !important; /* 弱化阴影，减少厚重感 */
+        }
+        .card:nth-child(1) { animation-delay: 0.8s; }
+        .card:nth-child(2) { animation-delay: 1.1s; }
+        .card:nth-child(3) { animation-delay: 1.4s; }
+        @keyframes titleFade {
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes cardFade {
+            to { opacity: 1; transform: translateY(0); }
+        }
+        /* 保留：底部竖向联系方式样式（增强适配） */
+        .vertical-contact {
+            writing-mode: vertical-rl !important;
+            text-orientation: upright !important;
+            -webkit-writing-mode: vertical-rl !important;
+            -ms-writing-mode: tb-rl !important;
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 10px !important;
+            padding: 12px !important;
+            background-color: rgba(255, 255, 255, 0.1) !important;
+            border-radius: 8px !important;
+            backdrop-filter: blur(5px) !important;
+            margin: 30px auto !important;
+            color: white !important;
+            font-weight: 500 !important;
+        }
+        /* 适配原有内容层级（避免被粒子遮挡） */
+        .full-width-nav, .banner-scroll, .header, .main, .footer {
+            position: relative;
+            z-index: 1;
+        }
+        /* 原有内容样式优化（适配渐变背景+通透卡片） */
+        .header {
+            text-align: center;
+            padding: 30px 20px;
+        }
+        .header-title {
+            font-size: 36px;
+            color: white;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            margin-bottom: 10px;
+        }
+        .header-subtitle {
+            font-size: 18px;
+            color: #f5f5f5;
+            text-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
+        }
+        /* 卡片基础样式（核心通透化修改） */
+        .card {
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px auto;
+            max-width: 800px;
+        }
+        .card-title {
+            color: white !important; /* 标题改为白色，适配通透背景 */
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2); /* 增加文字阴影，提升可读性 */
+            font-size: 24px;
+            margin-bottom: 15px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.5) !important; /* 边框改为半透明白色 */
+            padding-bottom: 8px;
+        }
+        .info-grid, .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+        .info-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        .info-icon {
+            background-color: rgba(67, 160, 71, 0.8) !important; /* 图标背景半透明 */
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+        }
+        .info-content h3 {
+            color: white !important; /* 信息标题改为白色 */
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+        .info-content p {
+            color: #f5f5f5 !important; /* 信息内容改为浅白色 */
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+            line-height: 1.5;
+        }
+        .skill-item {
+            background-color: rgba(255, 255, 255, 0.15) !important; /* 技能项背景半透明 */
+            border: 1px solid rgba(255, 255, 255, 0.2) !important; /* 技能项边框半透明 */
+            padding: 10px 15px;
+            border-radius: 8px;
+            color: white !important; /* 技能文字改为白色 */
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+        .thoughts {
+            color: #f5f5f5 !important; /* 感悟文字改为浅白色 */
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+            line-height: 1.8;
+            font-size: 16px;
+        }
+        /* 导航栏适配通透风格 */
+        .full-width-nav {
+            background-color: rgba(255, 255, 255, 0.15) !important;
+            backdrop-filter: blur(8px) !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;
+        }
+        .full-width-nav a {
+            color: white !important;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+        }
+        .full-width-nav a:hover {
+            background-color: rgba(67, 160, 71, 0.6) !important;
+        }
+        /* 横幅滚动标语适配 */
+        .banner-scroll {
+            background-color: rgba(0, 0, 0, 0.1) !important;
+            backdrop-filter: blur(5px) !important;
+        }
+        .banner-scroll p {
+            color: white !important;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+        }
+    </style>
+    <!-- 引入图标库（Logo用树叶图标） -->
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
+    <!-- 新增：粒子画布（底层背景） -->
+    <canvas id="particleCanvas"></canvas>
+
+    <!-- 保留：原有导航栏 -->
     <div class="full-width-nav bg-white shadow-md border-b border-nature-light">
         <div class="container mx-auto px-4">
             <ul class="flex flex-wrap justify-center md:justify-start">
@@ -30,20 +243,25 @@
             </ul>
         </div>
     </div>
-    <!-- 横幅滚动标语 -->
+
+    <!-- 保留：原有横幅滚动标语 -->
     <div class="banner-scroll">
         <p class="text-animate">
             热爱生活 · 乐于探索 · 持续成长 | 保持热爱，奔赴山海 | 努力成为更好的自己
         </p>
     </div>
 
-    <!-- 顶部横幅 -->
+    <!-- 保留：原有头部 + 新增Logo -->
     <header class="header" id="home">
+        <!-- 新增：自然主题Logo -->
+        <div class="nature-logo">
+            <i class="fas fa-leaf"></i>
+        </div>
         <h1 class="header-title">胡萝卜</h1>
         <p class="header-subtitle">一个不热爱学习的学生，但会因为无聊而学习非学校教授的学生。也是一个自E的人</p>
     </header>
 
-    <!-- 个人信息卡片 -->
+    <!-- 保留：原有个人信息卡片 -->
     <main class="main">
         <!-- 基本信息 -->
         <section class="card" id="basic-info">
@@ -104,15 +322,17 @@
         </section>
     </main>
 
-    <!-- 底部信息 -->
-    <footer        <div class="vertical-contact">
+    <!-- 保留：底部竖向联系方式 -->
+    <footer class="footer">
+        <div class="vertical-contact">
             <span>联系邮箱</span>
             <span>2438338134@qq.com</span>
             <span>个人微信</span>
-            <span>huluobo8888</span>  
-           </footer>
+            <span>huluobo8888</span>
+        </div>
+    </footer>
 
-    <!-- 页面加载动画和平滑滚动 -->
+    <!-- 保留：原有页面加载动画和平滑滚动 -->
     <script>
         // 页面加载动画
         window.addEventListener('load', () => {
@@ -152,6 +372,122 @@
                 });
             });
         });
+
+        /* ---------- 新增：自然主题五彩粒子效果（无爱心） ---------- */
+        const canvas = document.getElementById('particleCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // 画布自适应窗口
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        // 自然系五彩粒子配色
+        const particleColors = [
+            '#43a047', '#81c784', '#26a69a', '#00acc1', 
+            '#ffb74d', '#ffa726', '#ef5350', '#ba68c8'
+        ];
+
+        // 鼠标交互
+        let mouse = { x: canvas.width / 2, y: canvas.height / 2 };
+        canvas.addEventListener('mousemove', (e) => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+        });
+
+        // 粒子类定义
+        class NatureParticle {
+            constructor() {
+                // 随机生成粒子位置（全屏分布）
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                // 粒子大小（自然随机）
+                this.size = Math.random() * 2 + 0.5;
+                // 粒子速度（缓慢漂移）
+                this.vx = (Math.random() - 0.5) * 0.8;
+                this.vy = (Math.random() - 0.5) * 0.8;
+                // 生命周期和衰减
+                this.life = Math.random() * 8 + 4;
+                this.decay = Math.random() * 0.008 + 0.003;
+                // 随机颜色
+                this.color = particleColors[Math.floor(Math.random() * particleColors.length)];
+            }
+
+            // 更新粒子状态
+            update() {
+                // 鼠标轻微吸引力
+                const dx = mouse.x - this.x;
+                const dy = mouse.y - this.y;
+                const distance = Math.hypot(dx, dy);
+                if (distance < 200) {
+                    const force = 30 / distance;
+                    this.vx += dx * force * 0.0008;
+                    this.vy += dy * force * 0.0008;
+                }
+
+                // 位置更新
+                this.x += this.vx;
+                this.y += this.vy;
+                // 生命周期衰减
+                this.life -= this.decay;
+            }
+
+            // 绘制粒子
+            draw() {
+                ctx.save();
+                ctx.globalCompositeOperation = 'lighter';
+                ctx.globalAlpha = this.life / 8;
+
+                // 径向渐变粒子（模拟自然光斑）
+                const gradient = ctx.createRadialGradient(
+                    this.x, this.y, 0,
+                    this.x, this.y, this.size
+                );
+                gradient.addColorStop(0, this.color);
+                gradient.addColorStop(1, 'transparent');
+                
+                ctx.fillStyle = gradient;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        // 粒子数组
+        let particles = [];
+
+        // 生成粒子
+        function createParticles() {
+            if (particles.length < 300 && Math.random() < 0.8) {
+                particles.push(new NatureParticle());
+            }
+        }
+
+        // 主动画循环
+        function animateParticles() {
+            // 半透明背景层实现拖影
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.03)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // 生成新粒子
+            createParticles();
+
+            // 更新并绘制所有粒子
+            particles = particles.filter(particle => {
+                particle.update();
+                particle.draw();
+                return particle.life > 0;
+            });
+
+            requestAnimationFrame(animateParticles);
+        }
+
+        // 启动粒子动画
+        animateParticles();
     </script>
 </body>
 </html>
