@@ -1,0 +1,214 @@
+ * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* 背景容器：全屏覆盖 + 层级最低 + 硬件加速 */
+        .bg-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -9999; /* 确保在所有内容最下方 */
+            background-size: 400% 400%; /* 为渐变动画提供足够的空间 */
+            /* 核心：全局无缝渐变动画，80秒完成一轮完整循环 */
+            animation: globalBgGradient 80s ease-in-out infinite;
+            /* 硬件加速，提升动画流畅度 */
+            transform: translateZ(0);
+            will-change: background-position, background-color;
+        }
+
+        /* 全局背景渐变关键帧 - 极致平滑过渡 */
+        @keyframes globalBgGradient {
+            0%, 100% {
+                /* 蓝天白云（初始/结束）- 层次更丰富的渐变 */
+                background: 
+                    radial-gradient(circle at 10% 20%, rgba(135, 206, 235, 0.9) 0%, rgba(176, 224, 230, 0.8) 25%, rgba(240, 248, 255, 0.7) 50%, rgba(173, 216, 230, 0.8) 75%, rgba(135, 206, 235, 0.9) 100%),
+                    url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 15a5 5 0 0 1 10 0a5 5 0 0 1-10 0zM40 25a5 5 0 0 1 10 0a5 5 0 0 1-10 0zM50 35a5 5 0 0 1 10 0a5 5 0 0 1-10 0zM60 25a5 5 0 0 1 10 0a5 5 0 0 1-10 0zM70 15a5 5 0 0 1 10 0a5 5 0 0 1-10 0z' fill='%23ffffff' fill-opacity='0.6' fill-rule='evenodd'/%3E%3C/svg%3E");
+                background-position: 0% 0%;
+            }
+            25% {
+                /* 蓝天白云向夕阳过渡 */
+                background: 
+                    radial-gradient(circle at 25% 30%, rgba(255, 165, 0, 0.2) 0%, rgba(135, 206, 235, 0.8) 25%, rgba(255, 140, 0, 0.1) 50%, rgba(173, 216, 230, 0.8) 75%, rgba(255, 69, 0, 0.1) 100%),
+                    url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 15a5 5 0 0 1 10 0a5 5 0 0 1-10 0zM40 25a5 5 0 0 1 10 0a5 5 0 0 1-10 0zM50 35a5 5 0 0 1 10 0a5 5 0 0 1-10 0zM60 25a5 5 0 0 1 10 0a5 5 0 0 1-10 0zM70 15a5 5 0 0 1 10 0a5 5 0 0 1-10 0z' fill='%23ffffff' fill-opacity='0.5' fill-rule='evenodd'/%3E%3C/svg%3E");
+                background-position: 50% 25%;
+            }
+            50% {
+                /* 夕阳火烧云（中间峰值）- 更浓郁的色彩 */
+                background: 
+                    radial-gradient(circle at 50% 50%, rgba(255, 69, 0, 0.9) 0%, rgba(255, 140, 0, 0.8) 25%, rgba(255, 215, 0, 0.7) 50%, rgba(255, 99, 71, 0.8) 75%, rgba(255, 69, 0, 0.9) 100%),
+                    url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 40a6 6 0 0 1 12 0a6 6 0 0 1-12 0zM60 40a6 6 0 0 1 12 0a6 6 0 0 1-12 0zM40 60a6 6 0 0 1 12 0a6 6 0 0 1-12 0zM80 60a6 6 0 0 1 12 0a6 6 0 0 1-12 0z' fill='%23ffffff' fill-opacity='0.4' fill-rule='evenodd'/%3E%3C/svg%3E");
+                background-position: 100% 50%;
+            }
+            75% {
+                /* 夕阳向星空过渡 */
+                background: 
+                    radial-gradient(circle at 75% 70%, rgba(0, 0, 51, 0.2) 0%, rgba(255, 140, 0, 0.1) 25%, rgba(25, 25, 112, 0.2) 50%, rgba(255, 99, 71, 0.1) 75%, rgba(0, 0, 26, 0.2) 100%),
+                    url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 40a6 6 0 0 1 12 0a6 6 0 0 1-12 0zM60 40a6 6 0 0 1 12 0a6 6 0 0 1-12 0zM40 60a6 6 0 0 1 12 0a6 6 0 0 1-12 0zM80 60a6 6 0 0 1 12 0a6 6 0 0 1-12 0z' fill='%23ffffff' fill-opacity='0.3' fill-rule='evenodd'/%3E%3C/svg%3E");
+                background-position: 50% 75%;
+            }
+            85% {
+                /* 浪漫星空（深度）- 更梦幻的星空效果 */
+                background: 
+                    radial-gradient(circle at 90% 80%, rgba(0, 0, 51, 0.95) 0%, rgba(0, 0, 102, 0.9) 25%, rgba(25, 25, 112, 0.85) 50%, rgba(0, 0, 139, 0.9) 75%, rgba(0, 0, 26, 0.95) 100%),
+                    url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10 10a2 2 0 1 1 0 4a2 2 0 0 1 0-4zm20 30a2 2 0 1 1 0 4a2 2 0 0 1 0-4zm20 30a2 2 0 1 1 0 4a2 2 0 0 1 0-4zm30-30a2 2 0 1 1 0 4a2 2 0 0 1 0-4zm20-30a2 2 0 1 1 0 4a2 2 0 0 1 0-4zm-80 80a2 2 0 1 1 0 4a2 2 0 0 1 0-4zm80-80a2 2 0 1 1 0 4a2 2 0 0 1 0-4zm-80 40a2 2 0 1 1 0 4a2 2 0 0 1 0-4zm40 40a2 2 0 1 1 0 4a2 2 0 0 1 0-4z' fill='%23ffffff' fill-opacity='0.8' fill-rule='evenodd'/%3E%3C/svg%3E");
+                background-position: 100% 100%;
+            }
+        }
+
+        /* 全局页面样式适配渐变背景 */
+        html, body {
+            min-height: 100vh;
+            background: transparent !important; /* 强制清空默认背景 */
+            font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+        }
+
+        /* 安全标识栏样式 */
+        .bg-nature-main\/10 {
+            background-color: rgba(72, 187, 120, 0.25) !important;
+            backdrop-filter: blur(8px); /* 毛玻璃效果，适配渐变背景 */
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        /* 核心：时间天气+搜索栏 对半分模块 */
+        .main-container {
+            background-color: rgba(255, 255, 255, 0.9) !important;
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+            margin: 16px auto;
+            max-width: 1200px;
+            width: 95%;
+            display: flex; /* 横向布局 */
+            gap: 16px; /* 两个子模块之间的间距 */
+        }
+
+        /* 时间天气模块（左半部分） */
+        .time-weather-section {
+            flex: 1; /* 占一半宽度 */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        /* 搜索栏模块（右半部分） */
+        .search-section {
+            flex: 1; /* 占一半宽度 */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        /* 时间天气样式优化 */
+        .time-display {
+            font-size: 28px;
+            font-weight: bold;
+            color: #2f855a;
+            text-align: center;
+        }
+        .date-weather-display {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            align-items: center;
+            color: #666;
+            font-size: 14px;
+        }
+        .date-weather-display span {
+            padding: 4px 8px;
+            border-radius: 4px;
+            background-color: rgba(72, 187, 120, 0.1);
+        }
+
+        /* 搜索栏样式优化 */
+        .search-inner {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        #search-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+        #search-input:focus {
+            border-color: #48bb78;
+            box-shadow: 0 0 0 3px rgba(72, 187, 120, 0.1);
+        }
+
+        /* 搜索引擎选择器样式优化 */
+        .engine-selector {
+            position: relative;
+            width: 100%;
+        }
+        .engine-selected {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            cursor: pointer;
+            background-color: #fff;
+        }
+        .engine-options {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background-color: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            margin-top: 4px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            z-index: 999;
+            display: none;
+        }
+        .engine-selector:hover .engine-options {
+            display: block;
+        }
+        .engine-option {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 12px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+        .engine-option:hover {
+            background-color: #f8fafc;
+        }
+        .engine-option.active {
+            background-color: rgba(72, 187, 120, 0.1);
+            color: #2f855a;
+        }
+        .engine-check {
+            color: #48bb78;
+            font-weight: bold;
+        }
+
+        /* 移动端适配：小屏幕下改为上下排列 */
+        @media (max-width: 768px) {
+            .main-container {
+                flex-direction: column; /* 移动端改为纵向排列 */
+                width: 90%;
+                padding: 12px;
+            }
+            .time-display {
+                font-size: 24px;
+            }
+            .date-weather-display {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
