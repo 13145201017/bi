@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -7,8 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>旅游推荐</title>
     <!-- 引入Tailwind CSS -->
-    <script src="jj.css"></script>
-    <script src="index.css"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="jj.css">
+    <link rel="stylesheet" href="index.css">
     <link rel="stylesheet" href="shp.css">
     <link rel="stylesheet" href="sou.css">
     <script>
@@ -25,211 +24,316 @@
                 }
             }
         }
-    </script><!-- 放在页面底部、</body> 前面 -->
-<script>
-const realtimeData = {
-    iconText: '晴',
-    condition: '雾转阴',
-    temp: '12.4℃',
-    feels: '11.5℃',
-    humidity: '52%',
-    wind: '西北风 微风',
-    pressure: '991.9hPa',
-    aqi: '轻度污染(113)'
-};
-
-// 修复后的时间+日期更新函数
-function updateTime() {
-  const now = new Date();
-  // 时间
-  const hours = now.getHours().toString().padStart(2, '0');
-  const minutes = now.getMinutes().toString().padStart(2, '0');
-  const seconds = now.getSeconds().toString().padStart(2, '0');
-  // 确保元素存在再赋值（避免报错中断）
-  const timeEl = document.getElementById('current-time');
-  if (timeEl) timeEl.textContent = `${hours}:${minutes}:${seconds}`;
-  
-  // 日期
-  const year = now.getFullYear();
-  const month = (now.getMonth() + 1).toString().padStart(2, '0');
-  const day = now.getDate().toString().padStart(2, '0');
-  const weekdays = ['日', '一', '二', '三', '四', '五', '六'];
-  const weekday = weekdays[now.getDay()];
-  const dateEl = document.getElementById('current-date');
-  if (dateEl) dateEl.textContent = `${year}年${month}月${day}日 星期${weekday}`;
-}
-
-// 天气渲染
-const weatherEl = document.querySelector('.realtime-weather');
-if (weatherEl) {
-  weatherEl.innerHTML = `
-    <span id="realtime-icon" class="weather-text-icon">${realtimeData.iconText}</span>
-    <div class="weather-detail">
-        <div class="weather-main">
-            <span id="realtime-condition">${realtimeData.condition}</span>
-            <span id="realtime-temp">${realtimeData.temp}</span>
-        </div>
-        <div class="weather-meta">
-            <span>体感：<span id="realtime-feels">${realtimeData.feels}</span></span>
-            <span>湿度：<span id="realtime-humidity">${realtimeData.humidity}</span></span>
-            <span>风向：<span id="realtime-wind">${realtimeData.wind}</span></span>
-            <span>气压：<span id="realtime-pressure">${realtimeData.pressure}</span></span>
-            <span>空气质量：<span id="realtime-aqi">${realtimeData.aqi}</span></span>
-        </div>
-    </div>
-  `;
-}
-
-// 立即执行+定时刷新（确保不中断）
-updateTime();
-setInterval(updateTime, 1000);
-</script>
-
-
+    </script>
+    <!-- 核心：一次性渐变到固定值 + 高对比度文字样式 -->
     <style>
-    
-  
+        /* 重置全局样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-        /* 新增搜索栏整合样式 */
-        .header-row {
+        /* 背景容器：一次性渐变到夜晚后固定 */
+        /* 背景容器：一次性渐变到夜晚后固定 */
+        .bg-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -9999;
+            background-size: 400% 400%;
+            /* 20秒一次性渐变到夜晚，然后保持 */
+            animation: bgGradientAnimation 20s ease-in-out forwards;
+            transform: translateZ(0);
+            will-change: background-position, background-color;
+        }
+
+        /* 一次性渐变关键帧（从白天到夜晚，完成后固定） */
+        @keyframes bgGradientAnimation {
+            0% {
+                /* 初始：白天（蓝天白云） */
+                background: 
+                    radial-gradient(circle at 10% 20%, rgba(135, 206, 235, 0.9) 0%, rgba(176, 224, 230, 0.8) 25%, rgba(240, 248, 255, 0.7) 50%, rgba(173, 216, 230, 0.8) 75%, rgba(135, 206, 235, 0.9) 100%),
+                    url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 15a5 5 0 0 1 10 0a5 5 0 0 1-10 0zM40 25a5 5 0 0 1 10 0a5 5 0 0 1-10 0zM50 35a5 5 0 0 1 10 0a5 5 0 0 1-10 0zM60 25a5 5 0 0 1 10 0a5 5 0 0 1-10 0zM70 15a5 5 0 0 1 10 0a5 5 0 0 1-10 0z' fill='%23ffffff' fill-opacity='0.6' fill-rule='evenodd'/%3E%3C/svg%3E");
+                background-position: 0% 0%;
+            }
+            100% {
+                /* 目标：夜晚（星空）- 完成后固定 */
+                background: 
+                    radial-gradient(circle at 90% 80%, rgba(0, 0, 51, 0.95) 0%, rgba(0, 0, 102, 0.9) 25%, rgba(25, 25, 112, 0.85) 50%, rgba(0, 0, 139, 0.9) 75%, rgba(0, 0, 26, 0.95) 100%),
+                    url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10 10a2 2 0 1 1 0 4a2 2 0 0 1 0-4zm20 30a2 2 0 1 1 0 4a2 2 0 0 1 0-4zm20 30a2 2 0 1 1 0 4a2 2 0 0 1 0-4zm30-30a2 2 0 1 1 0 4a2 2 0 0 1 0-4zm20-30a2 2 0 1 1 0 4a2 2 0 0 1 0-4zm-80 80a2 2 0 1 1 0 4a2 2 0 0 1 0-4zm80-80a2 2 0 1 1 0 4a2 2 0 0 1 0-4zm-80 40a2 2 0 1 1 0 4a2 2 0 0 1 0-4zm40 40a2 2 0 1 1 0 4a2 2 0 0 1 0-4z' fill='%23ffffff' fill-opacity='0.8' fill-rule='evenodd'/%3E%3C/svg%3E");
+                background-position: 100% 100%;
+            }
+        }
+
+        /* 全局页面样式 */
+        html, body {
+            min-height: 100vh;
+            background: transparent !important;
+            font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+        }
+
+        /* 安全标识栏 */
+        .bg-nature-main\/10 {
+            background-color: rgba(72, 187, 120, 0.25) !important;
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            transition: all 20s ease-in-out;
+        }
+
+        /* 核心模块：20秒渐变到目标样式后固定 + 高对比度背景 */
+        .main-container {
+            background-color: rgba(255, 255, 255, 0.95) !important; /* 提高不透明度 */
+            backdrop-filter: blur(12px); /* 增强模糊，提升文字可读性 */
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15); /* 增强阴影 */
+            margin: 16px auto;
+            max-width: 1200px;
+            width: 95%;
+            display: flex;
+            gap: 16px;
+            /* 20秒渐变到目标样式，完成后固定 */
+            transition: all 20s ease-in-out forwards;
+        }
+
+        /* 左侧：时间天气模块 - 增加内边距和间距 */
+        .time-weather-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 16px; /* 增大间距 */
+            padding: 12px; /* 增加内边距 */
+        }
+
+        /* 右侧：搜索栏模块 */
+        .search-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        /* 时间样式：增大字体 + 高对比度颜色 */
+        .time-display {
+            font-size: 32px; /* 增大字体 */
+            font-weight: 700; /* 加粗 */
+            color: #1e3a8a; /* 初始颜色：深蓝色（高对比度） */
+            text-align: center;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.1); /* 增加文字阴影 */
+            transition: color 20s ease-in-out forwards;
+        }
+
+        /* 天气信息：增大字体 + 高对比度样式 */
+        .date-weather-display {
             display: flex;
             flex-wrap: wrap;
+            gap: 10px; /* 增大间距 */
+            justify-content: center;
+            align-items: center;
+            color: #1f2937; /* 初始颜色：深灰（高对比度） */
+            font-size: 16px; /* 增大字体 */
+            font-weight: 500; /* 加粗 */
+            line-height: 1.6;
+            transition: all 20s ease-in-out forwards;
+        }
+        .date-weather-display span {
+            padding: 6px 12px; /* 增大内边距 */
+            border-radius: 8px; /* 增大圆角 */
+            background-color: rgba(243, 244, 246, 0.8); /* 浅灰背景，提高对比度 */
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1); /* 增加标签阴影 */
+            transition: all 20s ease-in-out forwards;
+            white-space: nowrap; /* 防止文字换行 */
+        }
+
+        /* 搜索栏样式 */
+        .search-inner {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        #search-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #e2e8f0; /* 初始边框 */
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+            transition: all 20s ease-in-out forwards;
+        }
+        #search-input:focus {
+            border-color: #48bb78;
+            box-shadow: 0 0 0 3px rgba(72, 187, 120, 0.1);
+        }
+
+        /* 搜索引擎选择器：20秒渐变到目标样式 */
+        .engine-selector {
+            position: relative;
+            width: 100%;
+        }
+        .engine-selected {
+            display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 1rem;
+            padding: 8px 12px;
+            border: 1px solid #e2e8f0; /* 初始边框 */
+            border-radius: 8px;
+            cursor: pointer;
+            background-color: #fff; /* 初始背景 */
+            transition: all 20s ease-in-out forwards;
         }
-        
-        .search-mini {
-            flex: 1;
-            min-width: 250px;
+        .engine-options {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background-color: #fff; /* 初始背景 */
+            border: 1px solid #e2e8f0; /* 初始边框 */
+            border-radius: 8px;
+            margin-top: 4px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            z-index: 999;
+            display: none;
+            transition: all 20s ease-in-out forwards;
         }
-        
-        .search-mini .engine-selector {
-            width: 120px;
+        .engine-selector:hover .engine-options {
+            display: block;
         }
-        
-        .search-mini .engine-selected {
-            padding: 6px 10px;
+        .engine-option {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 12px;
+            cursor: pointer;
+            transition: background-color 0.5s ease-in-out;
         }
-        
-        .search-mini #search-input {
-            padding: 6px 36px 6px 30px;
-            font-size: 14px;
+        .engine-option:hover {
+            background-color: #f8fafc;
         }
-        
-        .search-mini #search-button,
-        .search-mini #reset-search {
-            padding: 6px 12px;
-            font-size: 14px;
+        .engine-option.active {
+            background-color: rgba(72, 187, 120, 0.1); /* 初始背景 */
+            color: #2f855a; /* 初始颜色 */
+            transition: all 20s ease-in-out forwards;
         }
-        
-        .search-mini .engine-icon {
-            width: 16px;
-            height: 16px;
+        .engine-check {
+            color: #48bb78; /* 初始颜色 */
+            font-weight: bold;
+            transition: color 20s ease-in-out forwards;
         }
-        
-        .search-mini .search-suggestions {
-            font-size: 12px;
+
+        /* 移动端适配 */
+        @media (max-width: 768px) {
+            .main-container {
+                flex-direction: column;
+                width: 90%;
+                padding: 12px;
+            }
+            .time-display {
+                font-size: 28px;
+            }
+            .date-weather-display {
+                flex-direction: column;
+                text-align: center;
+                font-size: 14px;
+            }
+            .date-weather-display span {
+                width: 100%;
+                text-align: center;
+            }
         }
-        
-        .search-mini .search-suggestion-btn {
-            padding: 2px 8px;
-            font-size: 12px;
-        }
-        
     </style>
 </head>
-<!-- 安全标识顶部栏 -->
-<div class="bg-nature-main/10 border-b border-nature-main/30 py-2 px-4">
-    <div class="container mx-auto flex items-center justify-center text-sm text-nature-dark">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2 text-nature-main" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-      </svg>
-      <span>🔒 本网站已通过安全验证，无恶意广告/钓鱼链接，放心浏览</span>
-    </div>
-  </div>
-  
-<body class="bg-nature-light min-h-screen">
-    <!-- 时间+天气+搜索栏横向并排模块 -->
-     <div class="top-banner">
-            
-                                         
-                    <div class="weather-meta">
-                        <div class="time-section">
-                <h1 id="current-time">12:00:00</h1>
-                <span id="current-date">2026年01月09日 星期五</span>
-            
-                
-      
-                        <span id="realtime-condition">晴</span>
-                        <span id="realtime-temp">11.4℃</span>
-     <span>体感：<span id="realtime-feels">11.5℃</span></span>
-                        <span>湿度：<span id="realtime-humidity">51%</span></span>
-                        <span>风向：<span id="realtime-wind">西北风 微风</span></span>
-      </div>
-                </div>
-                </div>
-            </div>
+<body>
+    <!-- 背景容器 -->
+    <div class="bg-container"></div>
 
-            <!-- 缩小的搜索栏模块 -->
-            <div class="search-mini">
-                <div class="flex flex-col md:flex-row items-center justify-between gap-2">
-                    <!-- 搜索引擎选择器 -->
-                    <div class="engine-selector">
-                        <div class="engine-selected" id="engine-selected">
-                            <div class="flex items-center">
-                                <div class="engine-icon" id="selected-engine-icon"></div>
-                                <span id="selected-engine-name">本地</span>
-                            </div>
-                            <svg class="engine-toggle" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <polyline points="6 9 12 15 18 9"></polyline>
-                            </svg>
+    <!-- 安全标识顶部栏 -->
+    <div class="bg-nature-main/10 border-b border-nature-main/30 py-2 px-4">
+        <div class="container mx-auto flex items-center justify-center text-sm text-nature-dark">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2 text-nature-main" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+            </svg>
+            <span>🔒 本网站已通过安全验证，无恶意广告/钓鱼链接，放心浏览</span>
+        </div>
+    </div>
+
+    <!-- 核心：时间天气+搜索栏 对半分模块 -->
+    <div class="main-container" id="mainContainer">
+        <!-- 左侧：时间天气模块 -->
+        <div class="time-weather-section">
+            <div class="time-display" id="current-time">12:00:00</div>
+            <div class="date-weather-display" id="dateWeatherDisplay">
+                <span id="current-date">2026年01月09日 星期五</span>
+                <span id="realtime-condition">晴</span>
+                <span id="realtime-temp">25.0℃</span>
+                <span>体感：<span id="realtime-feels">26.0℃</span></span>
+                <span>湿度：<span id="realtime-humidity">45%</span></span>
+                <span>风向：<span id="realtime-wind">东南风 3级</span></span>
+            </div>
+        </div>
+
+        <!-- 右侧：搜索栏模块 -->
+        <div class="search-section">
+            <div class="search-inner">
+                <!-- 搜索引擎选择器 -->
+                <div class="engine-selector">
+                    <div class="engine-selected" id="engine-selected">
+                        <div class="flex items-center">
+                            <div class="engine-icon" id="selected-engine-icon"></div>
+                            <span id="selected-engine-name">本地</span>
                         </div>
-                        <div class="engine-options" id="engine-options">
-                            <div class="engine-option active" data-engine="local" data-icon="local">
-                                <div class="engine-icon local-icon"></div>
-                                <span class="engine-name">本地</span>
-                                <span class="engine-check">✓</span>
-                            </div>
-                            <div class="engine-option" data-engine="360" data-icon="360">
-                                <div class="engine-icon _360-icon"></div>
-                                <span class="engine-name">360</span>
-                                <span class="engine-check"></span>
-                            </div>
-                            <div class="engine-option" data-engine="baidu" data-icon="baidu">
-                                <div class="engine-icon baidu-icon"></div>
-                                <span class="engine-name">百度</span>
-                                </span>
-                                <span class="engine-check"></span>
-                            </div>
-                            <div class="engine-option" data-engine="bing" data-icon="bing">
-                                <div class="engine-icon bing-icon"></div>
-                                <span class="engine-name">必应</span>
-                                <span class="engine-check"></span>
-                            </div>
-                            <div class="engine-option" data-engine="google" data-icon="google">
-                                <div class="engine-icon google-icon"></div>
-                                <span class="engine-name">谷歌</span>
-                                <span class="engine-check"></span>
-                            </div>
-                            <div class="engine-option" data-engine="doubao" data-icon="doubao">
-                                <div class="engine-icon doubao-icon"></div>
-                                <span class="engine-name">豆包Ai</span>
-                                <span class="engine-check"></span>
-                            </div>
-                            <div class="engine-option" data-engine="qianwen" data-icon="qianwen">
-                                <div class="engine-icon qianwen-icon"></div>
-                                <span class="engine-name">千问Ai</span>
-                                <span class="engine-check"></span>
-                            </div>
-                            <div class="engine-option" data-engine="douyin" data-icon="douyin">
-                                <div class="engine-icon douyin-icon"></div>
-                                <span class="engine-name">抖音记录美好生活</span>
-                                <span class="engine-check"></span>
-                            </div>
+                        <svg class="engine-toggle" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </div>
+                    <div class="engine-options" id="engine-options">
+                        <div class="engine-option active" data-engine="local" data-icon="local">
+                            <div class="engine-icon local-icon"></div>
+                            <span class="engine-name">本地</span>
+                            <span class="engine-check">✓</span>
+                        </div>
+                        <div class="engine-option" data-engine="360" data-icon="360">
+                            <div class="engine-icon _360-icon"></div>
+                            <span class="engine-name">360</span>
+                            <span class="engine-check"></span>
+                        </div>
+                        <div class="engine-option" data-engine="baidu" data-icon="baidu">
+                            <div class="engine-icon baidu-icon"></div>
+                            <span class="engine-name">百度</span>
+                            <span class="engine-check"></span>
+                        </div>
+                        <div class="engine-option" data-engine="bing" data-icon="bing">
+                            <div class="engine-icon bing-icon"></div>
+                            <span class="engine-name">必应</span>
+                            <span class="engine-check"></span>
+                        </div>
+                        <div class="engine-option" data-engine="google" data-icon="google">
+                            <div class="engine-icon google-icon"></div>
+                            <span class="engine-name">谷歌</span>
+                            <span class="engine-check"></span>
+                        </div>
+                        <div class="engine-option" data-engine="doubao" data-icon="doubao">
+                            <div class="engine-icon doubao-icon"></div>
+                            <span class="engine-name">豆包Ai</span>
+                            <span class="engine-check"></span>
+                        </div>
+                        <div class="engine-option" data-engine="qianwen" data-icon="qianwen">
+                            <div class="engine-icon qianwen-icon"></div>
+                            <span class="engine-name">千问Ai</span>
+                            <span class="engine-check"></span>
+                        </div>
+                        <div class="engine-option" data-engine="douyin" data-icon="douyin">
+                            <div class="engine-icon douyin-icon"></div>
+                            <span class="engine-name">抖音记录美好生活</span>
+                            <span class="engine-check"></span>
                         </div>
                     </div>
-                    
+                </div>
+
+                
                     <div class="w-full md:flex-1 relative">
                         <input 
                             type="text" 
@@ -715,5 +819,277 @@ setInterval(updateTime, 1000);
     <script src="logo.js"></script>
     <script src="sou.js"></script>
     <script src="kk.js"></script>
+  <!-- 脚本部分：一次性渐变到固定值，完成后停止 + 高对比度颜色配置 -->
+    <script>
+        // 配置：初始值和目标值（高对比度颜色）
+        const config = {
+            // 时间渐变配置（初始时间偏移0，目标偏移2小时）
+            initialTimeOffset: 0,    // 初始：实际时间
+            targetTimeOffset: 7200,  // 目标：+2小时
+            // 天气初始值
+            initialWeather: {
+                condition: '晴',
+                temp: 25.0,          // 初始温度：25℃
+                feels: 26.0,         // 初始体感：26℃
+                humidity: 45,        // 初始湿度：45%
+                wind: '东南风 3级'
+            },
+            // 天气目标值（固定不变）
+            targetWeather: {
+                condition: '晴转星空',
+                temp: 10.0,          // 目标温度：10℃
+                feels: 8.5,          // 目标体感：8.5℃
+                humidity: 80,        // 目标湿度：80%
+                wind: '北风 1级'
+            },
+            // 样式目标值（高对比度）
+            targetStyles: {
+                timeColor: '#ffffff',                // 时间文字：纯白色（高对比度）
+                textColor: '#f9fafb',                // 天气文字：极浅白（高对比度）
+                bgColor: 'rgba(15, 23, 42, 0.9)',    // 容器背景：深色高不透明度
+                tagBg: 'rgba(255, 255, 255, 0.15)',  // 标签背景：更高透明度的白色
+                engineBg: 'rgba(30, 41, 59, 0.95)',  // 引擎选择器背景：深色高不透明度
+                engineBorder: 'rgba(255, 255, 255, 0.3)', // 边框：更明显的浅白
+                engineText: '#ffffff',               // 引擎文字：纯白色
+                activeBg: 'rgba(72, 187, 120, 0.3)', // 选中项背景：更高对比度
+                activeColor: '#ffffff',              // 选中项文字：纯白色
+                checkColor: '#ffffff'                // 勾选颜色：纯白色
+            },
+            // 渐变时长（毫秒）
+            duration: 20000 // 20秒完成渐变
+        };
+
+        // 渐变完成标记
+        let gradientCompleted = false;
+        // 渐变开始时间
+        let startTime = Date.now();
+
+        // 线性插值函数
+        function lerp(a, b, t) {
+            return a + (b - a) * t;
+        }
+
+        // 一次性渐变到目标值
+        function updateGradient() {
+            // 如果已完成渐变，直接设置为目标值并停止
+            if (gradientCompleted) {
+                setTargetValues();
+                return;
+            }
+
+            // 计算渐变进度（0-1）
+            const elapsed = Date.now() - startTime;
+            const progress = Math.min(elapsed / config.duration, 1);
+            
+            // 当进度达到1时，标记为完成
+            if (progress >= 1) {
+                gradientCompleted = true;
+                setTargetValues();
+                return;
+            }
+
+            // 1. 计算渐进式时间
+            const timeOffset = lerp(config.initialTimeOffset, config.targetTimeOffset, progress);
+            const now = new Date();
+            const timeObj = new Date(now.getTime() + timeOffset * 1000);
+            
+            // 格式化时间
+            const hours = timeObj.getHours().toString().padStart(2, '0');
+            const minutes = timeObj.getMinutes().toString().padStart(2, '0');
+            const seconds = timeObj.getSeconds().toString().padStart(2, '0');
+            
+            // 格式化日期
+            const year = timeObj.getFullYear();
+            const month = (timeObj.getMonth() + 1).toString().padStart(2, '0');
+            const day = timeObj.getDate().toString().padStart(2, '0');
+            const weekdays = ['日', '一', '二', '三', '四', '五', '六'];
+            const weekday = weekdays[timeObj.getDay()];
+
+            // 2. 计算渐进式天气数据
+            const currentTemp = lerp(config.initialWeather.temp, config.targetWeather.temp, progress).toFixed(1);
+            const currentFeels = lerp(config.initialWeather.feels, config.targetWeather.feels, progress).toFixed(1);
+            const currentHumidity = Math.round(lerp(config.initialWeather.humidity, config.targetWeather.humidity, progress));
+            
+            // 天气文字：进度>0.5时切换为目标文字
+            const currentCondition = progress > 0.5 ? config.targetWeather.condition : config.initialWeather.condition;
+            const currentWind = progress > 0.5 ? config.targetWeather.wind : config.initialWeather.wind;
+
+            // 3. 更新DOM元素
+            document.getElementById('current-time').textContent = `${hours}:${minutes}:${seconds}`;
+            document.getElementById('current-date').textContent = `${year}年${month}月${day}日 星期${weekday}`;
+            document.getElementById('realtime-condition').textContent = currentCondition;
+            document.getElementById('realtime-temp').textContent = `${currentTemp}℃`;
+            document.getElementById('realtime-feels').textContent = `${currentFeels}℃`;
+            document.getElementById('realtime-humidity').textContent = `${currentHumidity}%`;
+            document.getElementById('realtime-wind').textContent = currentWind;
+
+            // 4. 渐进式更新样式
+            const timeDisplay = document.getElementById('current-time');
+            const dateWeatherDisplay = document.getElementById('dateWeatherDisplay');
+            const mainContainer = document.getElementById('mainContainer');
+            const engineSelected = document.getElementById('engine-selected');
+            const engineOptions = document.getElementById('engine-options');
+            const searchInput = document.getElementById('search-input');
+            const activeOption = document.querySelector('.engine-option.active');
+            const engineChecks = document.querySelectorAll('.engine-check');
+
+            // 时间文字颜色
+            timeDisplay.style.color = config.targetStyles.timeColor;
+            // 天气文字颜色和标签背景
+            dateWeatherDisplay.style.color = config.targetStyles.textColor;
+            dateWeatherDisplay.querySelectorAll('span').forEach(span => {
+                span.style.backgroundColor = config.targetStyles.tagBg;
+            });
+            // 主容器背景
+            mainContainer.style.backgroundColor = config.targetStyles.bgColor;
+            // 引擎选择器样式
+            engineSelected.style.backgroundColor = config.targetStyles.engineBg;
+            engineSelected.style.borderColor = config.targetStyles.engineBorder;
+            engineSelected.style.color = config.targetStyles.engineText;
+            // 引擎下拉框样式
+            engineOptions.style.backgroundColor = config.targetStyles.engineBg;
+            engineOptions.style.borderColor = config.targetStyles.engineBorder;
+            engineOptions.style.color = config.targetStyles.engineText;
+            // 搜索框边框
+            searchInput.style.borderColor = config.targetStyles.engineBorder;
+            // 选中项样式
+            if (activeOption) {
+                activeOption.style.backgroundColor = config.targetStyles.activeBg;
+                activeOption.style.color = config.targetStyles.activeColor;
+            }
+            // 勾选标记颜色
+            engineChecks.forEach(check => {
+                check.style.color = config.targetStyles.checkColor;
+            });
+
+            // 继续更新直到完成
+            requestAnimationFrame(updateGradient);
+        }
+
+        // 设置最终目标值（完成后固定）
+        function setTargetValues() {
+            // 1. 设置目标时间
+            const now = new Date();
+            const timeObj = new Date(now.getTime() + config.targetTimeOffset * 1000);
+            const hours = timeObj.getHours().toString().padStart(2, '0');
+            const minutes = timeObj.getMinutes().toString().padStart(2, '0');
+            const seconds = timeObj.getSeconds().toString().padStart(2, '0');
+            const year = timeObj.getFullYear();
+            const month = (timeObj.getMonth() + 1).toString().padStart(2, '0');
+            const day = timeObj.getDate().toString().padStart(2, '0');
+            const weekdays = ['日', '一', '二', '三', '四', '五', '六'];
+            const weekday = weekdays[timeObj.getDay()];
+
+            // 2. 设置目标天气
+            document.getElementById('current-time').textContent = `${hours}:${minutes}:${seconds}`;
+            document.getElementById('current-date').textContent = `${year}年${month}月${day}日 星期${weekday}`;
+            document.getElementById('realtime-condition').textContent = config.targetWeather.condition;
+            document.getElementById('realtime-temp').textContent = `${config.targetWeather.temp.toFixed(1)}℃`;
+            document.getElementById('realtime-feels').textContent = `${config.targetWeather.feels.toFixed(1)}℃`;
+            document.getElementById('realtime-humidity').textContent = `${config.targetWeather.humidity}%`;
+            document.getElementById('realtime-wind').textContent = config.targetWeather.wind;
+
+            // 3. 设置目标样式（永久固定）
+            const timeDisplay = document.getElementById('current-time');
+            const dateWeatherDisplay = document.getElementById('dateWeatherDisplay');
+            const mainContainer = document.getElementById('mainContainer');
+            const engineSelected = document.getElementById('engine-selected');
+            const engineOptions = document.getElementById('engine-options');
+            const searchInput = document.getElementById('search-input');
+            const activeOption = document.querySelector('.engine-option.active');
+            const engineChecks = document.querySelectorAll('.engine-check');
+
+            // 移除过渡（防止后续变化）
+            timeDisplay.style.transition = 'none';
+            dateWeatherDisplay.style.transition = 'none';
+            mainContainer.style.transition = 'none';
+            engineSelected.style.transition = 'none';
+            engineOptions.style.transition = 'none';
+            searchInput.style.transition = 'none';
+            if (activeOption) activeOption.style.transition = 'none';
+            engineChecks.forEach(check => check.style.transition = 'none');
+
+            // 应用目标样式（高对比度）
+            timeDisplay.style.color = config.targetStyles.timeColor;
+            timeDisplay.style.textShadow = '0 1px 3px rgba(0,0,0,0.3)'; // 增强文字阴影
+            dateWeatherDisplay.style.color = config.targetStyles.textColor;
+            dateWeatherDisplay.style.textShadow = '0 1px 2px rgba(0,0,0,0.2)'; // 增加文字阴影
+            dateWeatherDisplay.querySelectorAll('span').forEach(span => {
+                span.style.backgroundColor = config.targetStyles.tagBg;
+                span.style.transition = 'none';
+                span.style.boxShadow = '0 1px 4px rgba(0,0,0,0.2)'; // 增强标签阴影
+            });
+            mainContainer.style.backgroundColor = config.targetStyles.bgColor;
+            engineSelected.style.backgroundColor = config.targetStyles.engineBg;
+            engineSelected.style.borderColor = config.targetStyles.engineBorder;
+            engineSelected.style.color = config.targetStyles.engineText;
+            engineOptions.style.backgroundColor = config.targetStyles.engineBg;
+            engineOptions.style.borderColor = config.targetStyles.engineBorder;
+            engineOptions.style.color = config.targetStyles.engineText;
+            searchInput.style.borderColor = config.targetStyles.engineBorder;
+            if (activeOption) {
+                activeOption.style.backgroundColor = config.targetStyles.activeBg;
+                activeOption.style.color = config.targetStyles.activeColor;
+            }
+            engineChecks.forEach(check => {
+                check.style.color = config.targetStyles.checkColor;
+            });
+        }
+
+        // 搜索引擎选择器交互
+        function initEngineSelector() {
+            const engineSelected = document.getElementById('engine-selected');
+            const engineOptions = document.querySelectorAll('.engine-option');
+            const selectedEngineName = document.getElementById('selected-engine-name');
+            const selectedEngineIcon = document.getElementById('selected-engine-icon');
+
+            engineOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    engineOptions.forEach(opt => opt.classList.remove('active'));
+                    this.classList.add('active');
+                    const engineName = this.querySelector('.engine-name').textContent;
+                    const engineIcon = this.getAttribute('data-icon');
+                    if (selectedEngineName) selectedEngineName.textContent = engineName;
+                    if (selectedEngineIcon) {
+                        selectedEngineIcon.className = `engine-icon ${engineIcon}-icon`;
+                    }
+                    
+                    // 渐变完成后，新选中项应用目标样式
+                    if (gradientCompleted) {
+                        this.style.backgroundColor = config.targetStyles.activeBg;
+                        this.style.color = config.targetStyles.activeColor;
+                        this.querySelector('.engine-check').style.color = config.targetStyles.checkColor;
+                    }
+                });
+            });
+
+            // 点击外部关闭下拉菜单
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('.engine-selector')) {
+                    const optionsContainer = document.getElementById('engine-options');
+                    if (optionsContainer) optionsContainer.style.display = 'none';
+                }
+            });
+
+            // 切换下拉菜单
+            if (engineSelected) {
+                engineSelected.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const optionsContainer = document.getElementById('engine-options');
+                    if (optionsContainer) {
+                        optionsContainer.style.display = optionsContainer.style.display === 'block' ? 'none' : 'block';
+                    }
+                });
+            }
+        }
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 启动渐变更新
+            updateGradient();
+            // 初始化搜索引擎选择器
+            initEngineSelector();
+        });
+    </script>
 </body>
 </html>
