@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>个人自我介绍 </title>
+    <title>个人自我介绍 - 自然美景主题</title>
     <!-- 保留原有CSS引入 -->
     <link rel="stylesheet" href="geren.css">
     <link rel="stylesheet" href="luyou.css">
@@ -91,7 +91,16 @@
         @keyframes cardFade {
             to { opacity: 1; transform: translateY(0); }
         }
-        /* 保留：底部竖向联系方式样式（增强适配） */
+        /* 核心优化：快手专属竖排联系方式样式（降低遮挡） */
+        .contact-wrapper {
+            position: relative;
+            z-index: 1; /* 降低层级，避免遮挡背景感知 */
+            margin: 40px auto;
+            display: flex;
+            justify-content: center;
+            padding: 0 20px;
+        }
+        /* 强制竖排布局，移动端也保留竖排 + 极致通透 */
         .vertical-contact {
             writing-mode: vertical-rl !important;
             text-orientation: upright !important;
@@ -99,19 +108,59 @@
             -ms-writing-mode: tb-rl !important;
             display: flex !important;
             flex-direction: column !important;
-            gap: 10px !important;
-            padding: 12px !important;
-            background-color: rgba(255, 255, 255, 0.1) !important;
-            border-radius: 8px !important;
-            backdrop-filter: blur(5px) !important;
-            margin: 30px auto !important;
+            gap: 20px !important; /* 增大间距，减少视觉块感 */
+            padding: 20px 12px !important;
+            background-color: rgba(255, 255, 255, 0.08) !important; /* 大幅降低背景不透明度 */
+            border-radius: 15px !important;
+            backdrop-filter: blur(8px) !important; /* 降低模糊度，减少遮挡 */
+            border: 1px solid rgba(255, 255, 255, 0.15) !important; /* 弱化边框 */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05) !important; /* 弱化阴影 */
             color: white !important;
+            mix-blend-mode: soft-light; /* 混合模式，让容器和背景融合 */
+        }
+        /* 快手联系方式项样式 */
+        .contact-item {
+            display: flex !important;
+            align-items: center !important;
+            gap: 12px !important; /* 图标和文字间距 */
+            transition: all 0.4s ease !important;
+            padding: 8px 0 !important;
+            border-left: 2px solid transparent !important;
+            padding-left: 10px !important;
+            background-color: transparent !important; /* 移除项的背景 */
+        }
+        /* hover高亮效果（贴合快手橙+自然绿） */
+        .contact-item:hover {
+            transform: translateX(-6px) !important;
+            border-left-color: #fe2c55 !important; /* 快手品牌橙红 */
+            color: #fff !important;
+            text-shadow: 0 0 8px rgba(254, 44, 85, 0.6) !important;
+            background-color: rgba(254, 44, 85, 0.05) !important; /* hover仅轻微加背景 */
+        }
+        /* 快手图标专属样式（保留醒目度） */
+        .contact-icon {
+            font-size: 22px !important;
+            width: 36px !important;
+            height: 36px !important;
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+            background: linear-gradient(135deg, #fe2c55, #ff5851) !important; /* 快手渐变 */
+            border-radius: 50% !important;
+            box-shadow: 0 0 8px rgba(254, 44, 85, 0.4) !important; /* 弱化图标阴影 */
+            color: white !important;
+            mix-blend-mode: normal; /* 图标保持原有显示，不混合 */
+        }
+        .contact-text {
+            font-size: 17px !important;
+            letter-spacing: 1.2px !important;
             font-weight: 500 !important;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2) !important; /* 文字加阴影提升可读性，无需靠背景 */
         }
         /* 适配原有内容层级（避免被粒子遮挡） */
         .full-width-nav, .banner-scroll, .header, .main, .footer {
             position: relative;
-            z-index: 1;
+            z-index: 1; /* 统一降低所有内容层级，突出背景 */
         }
         /* 原有内容样式优化（适配渐变背景+通透卡片） */
         .header {
@@ -213,9 +262,31 @@
             color: white !important;
             text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
         }
+        /* 移动端强制保留竖排，仅调整容器大小 */
+        @media (max-width: 768px) {
+            .vertical-contact {
+                padding: 18px 8px !important;
+                gap: 15px !important;
+            }
+            .contact-icon {
+                width: 32px !important;
+                height: 32px !important;
+                font-size: 20px !important;
+            }
+            .contact-text {
+                font-size: 15px !important;
+            }
+        }
     </style>
-    <!-- 引入图标库（Logo用树叶图标） -->
+    <!-- 引入图标库（包含快手图标） -->
     <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- 补充快手图标（若font-awesome内置图标显示异常，用这个备用） -->
+    <style>
+        .fa-kuaishou:before {
+            content: "\e608";
+            font-family: "iconfont" !important;
+        }
+    </style>
 </head>
 <body>
     <!-- 新增：粒子画布（底层背景） -->
@@ -322,13 +393,31 @@
         </section>
     </main>
 
-    <!-- 保留：底部竖向联系方式 -->
+    <!-- 核心修改：竖排快手联系方式（4个） -->
     <footer class="footer">
-        <div class="vertical-contact">
-            <span>联系邮箱</span>
-            <span>2438338134@qq.com</span>
-            <span>个人微信</span>
-            <span>huluobo8888</span>
+        <div class="contact-wrapper">
+            <div class="vertical-contact">
+                <!-- 快手1 -->
+                <div class="contact-item">
+                    <i class="fab fa-kuaishou contact-icon"></i>
+                    <span class="contact-text">孤灯照晚窗，冷月浸清霜。</span>
+                </div>
+                <!-- 快手2 -->
+                <div class="contact-item">
+                    <i class="fab fa-kuaishou contact-icon"></i>
+                    <span class="contact-text">寻烟思人间，易祈原小彤。</span>
+                </div>
+                <!-- 快手3 -->
+                <div class="contact-item">
+                    <i class="fab fa-kuaishou contact-icon"></i>
+                    <span class="contact-text">欲将心事托，风过江水长。</span>
+                </div>
+                <!-- 快手4 -->
+                <div class="contact-item">
+                    <i class="fab fa-kuaishou contact-icon"></i>
+                    <span class="contact-text">梦醒人何处，唯有泪千行。</span>
+                </div>
+            </div>
         </div>
     </footer>
 
