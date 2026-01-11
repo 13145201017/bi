@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -27,90 +28,91 @@
     </script>
 
     <style>
-        /* 新增搜索栏整合样式 */
-        .header-row {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            justify-content: space-between;
-            gap: 1rem;
-        }
-        
-        .search-mini {
-            flex: 1;
-            min-width: 250px;
-        }
-        
-        .search-mini .engine-selector {
-            width: 120px;
-        }
-        
-        .search-mini .engine-selected {
-            padding: 6px 10px;
-        }
-        
-        .search-mini #search-input {
-            padding: 6px 36px 6px 30px;
-            font-size: 14px;
-        }
-        
-        .search-mini #search-button,
-        .search-mini #reset-search {
-            padding: 6px 12px;
-            font-size: 14px;
-        }
-        
-        .search-mini .engine-icon {
-            width: 16px;
-            height: 16px;
-        }
-        
-        .search-mini .search-suggestions {
-            font-size: 12px;
-        }
-        
-        .search-mini .search-suggestion-btn {
-            padding: 2px 8px;
-            font-size: 12px;
-        }
-
-        /* 时间天气横向排列 */
-        .weather-meta {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            align-items: center;
-            font-size: 14px;
-            color: #333;
-        }
-
-        .time-section {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            align-items: center;
-        }
-
-        .time-section > * {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        /* 顶部 50% / 50% 布局 */
-        .top-banner {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .top-banner > div {
-            flex: 1;
-            min-width: 280px;
-        }
-        
+    /* 新增搜索栏整合样式 */
+         .header-row {
+             display: flex;
+             flex-wrap: wrap;
+             align-items: center;
+             justify-content: space-between;
+             gap: 1rem;
+         }
+         
+         .search-mini {
+             flex: 1;
+             min-width: 250px;
+         }
+         
+         .search-mini .engine-selector {
+             width: 120px;
+         }
+         
+         .search-mini .engine-selected {
+             padding: 6px 10px;
+         }
+         
+         .search-mini #search-input {
+             padding: 6px 36px 6px 30px;
+             font-size: 14px;
+         }
+         
+         .search-mini #search-button,
+         .search-mini #reset-search {
+             padding: 6px 12px;
+             font-size: 14px;
+         }
+         
+         .search-mini .engine-icon {
+             width: 16px;
+             height: 16px;
+         }
+         
+         .search-mini .search-suggestions {
+             font-size: 12px;
+         }
+         
+         .search-mini .search-suggestion-btn {
+             padding: 2px 8px;
+             font-size: 12px;
+         }
+         /* 关键修复：时间天气强制横向排列 */
+         .weather-meta, .time-section {
+             display: flex !important;
+             flex-direction: row !important;
+             flex-wrap: nowrap !important; /* 禁止换行 */
+             gap: 10px !important;
+             align-items: center !important;
+             white-space: nowrap !important; /* 防止内容折行 */
+             overflow-x: auto !important; /* 溢出横向滚动 */
+             padding: 0 !important;
+             margin: 0 !important;
+         }
+         .time-section > * {
+             display: inline-flex !important;
+             align-items: center !important;
+             gap: 4px !important;
+             font-size: 14px !important;
+             color: #333 !important;
+         }
+         /* 顶部严格50%/50%布局 */
+         .top-banner {
+             display: flex !important;
+             flex-wrap: wrap;
+             justify-content: space-between;
+             align-items: center;
+             gap: 15px;
+             width: 100%;
+         }
+         .top-banner > div {
+             flex: 1 1 50% !important; /* 强制各占50% */
+             min-width: 280px; /* 小屏幕最小宽度 */
+             box-sizing: border-box;
+         }
+         /* 小屏幕适配 */
+         @media (max-width: 768px) {
+             .top-banner > div {
+                 flex: 1 1 100% !important; /* 小屏幕堆叠 */
+             }
+         }
     </style>
 </head>
 <!-- 安全标识顶部栏 -->
@@ -126,8 +128,6 @@
 <body class="bg-nature-light min-h-screen">
     
 <div class="top-banner p-4 bg-white shadow-sm"> 
-
-  <!-- 左侧：时间天气（横向一排） -->
   <div class="weather-meta">
     <div class="time-section">
       <h1 id="current-time">12:00:00</h1>
@@ -139,136 +139,133 @@
       <span>风向：<span id="realtime-wind">西北风 微风</span></span>
     </div>
   </div>
-
-  <!-- 右侧：搜索栏（占 50%） -->
-  <div class="search-mini">
-    <div class="flex flex-col md:flex-row items-center justify-between gap-2">
-      <!-- 搜索引擎选择器 -->
-      <div class="engine-selector">
-        <div class="engine-selected" id="engine-selected">
-          <div class="flex items-center">
-            <div class="engine-icon" id="selected-engine-icon"></div>
-            <span id="selected-engine-name">本地</span>
-          </div>
-          <svg class="engine-toggle" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="6 9 12 15 18 9"></polyline>
-          </svg>
-        </div>
-        <div class="engine-options" id="engine-options">
-          <div class="engine-option active" data-engine="local" data-icon="local">
-            <div class="engine-icon local-icon"></div>
-            <span class="engine-name">本地</span>
-            <span class="engine-check">✓</span>
-          </div>
-          <div class="engine-option" data-engine="360" data-icon="360">
-            <div class="engine-icon _360-icon"></div>
-            <span class="engine-name">360</span>
-            <span class="engine-check"></span>
-          </div>
-          <div class="engine-option" data-engine="baidu" data-icon="baidu">
-            <div class="engine-icon baidu-icon"></div>
-            <span class="engine-name">百度</span>
-            </span>
-            <span class="engine-check"></span>
-          </div>
-          <div class="engine-option" data-engine="bing" data-icon="bing">
-            <div class="engine-icon bing-icon"></div>
-            <span class="engine-name">必应</span>
-            <span class="engine-check"></span>
-          </div>
-          <div class="engine-option" data-engine="google" data-icon="google">
-            <div class="engine-icon google-icon"></div>
-            <span class="engine-name">谷歌</span>
-            <span class="engine-check"></span>
-          </div>
-          <div class="engine-option" data-engine="doubao" data-icon="doubao">
-            <div class="engine-icon doubao-icon"></div>
-            <span class="engine-name">豆包Ai</span>
-            <span class="engine-check"></span>
-          </div>
-          <div class="engine-option" data-engine="qianwen" data-icon="qianwen">
-            <div class="engine-icon qianwen-icon"></div>
-            <span class="engine-name">千问Ai</span>
-            <span class="engine-check"></span>
-          </div>
-          <div class="engine-option" data-engine="douyin" data-icon="douyin">
-            <div class="engine-icon douyin-icon"></div>
-            <span class="engine-name">抖音记录美好生活</span>
-            <span class="engine-check"></span>
-          </div>
-        </div>
-      </div>
-
-      <div class="w-full md:flex-1 relative">
-        <input 
-          type="text" 
-          id="search-input" 
-          placeholder="搜索自然美景、资讯、视频..." 
-          class="w-full border border-nature-main rounded-lg focus:outline-none focus:ring-2 focus:ring-nature-main focus:border-transparent"
-        >
-        <div class="absolute left-3 top-2 text-nature-main">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-          </svg>
-        </div>
-        <button 
-          id="clear-search" 
-          class="absolute right-24 top-2 text-gray-400 hover:text-gray-600 hidden"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
-          </svg>
-        </button>
-      </div>
-      <div class="flex gap-1 w-full md:w-auto">
-        <button 
-          id="search-button" 
-          class="bg-nature-main text-white rounded-lg hover:bg-nature-dark transition-colors duration-300 font-medium flex items-center gap-1 justify-center w-full md:w-auto"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-          </svg>
-          搜索
-        </button>
-      
-      </div>
-    </div>
-
-    <!-- 搜索框安全标识 -->
-    <div class="absolute right-40 top-2 text-nature-main">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-      </svg>
-    </div>
-
-    <!-- 搜索结果区域 -->
-    <div id="search-results" class="mt-2 hidden z-10 relative">
-      <div class="bg-white rounded-lg shadow-md p-3 w-full">
-        <div class="flex justify-between items-center mb-2">
-          <h3 class="text-sm font-bold text-nature-dark">搜索结果</h3>
-          <span id="result-count" class="text-xs text-gray-500"></span>
-        </div>
-        <div id="results-container" class="space-y-2 max-h-60 overflow-y-auto pr-1 text-sm">
-          <!-- 搜索结果会动态插入到这里 -->
-        </div>
-      </div>
-    </div>
-
-    <!-- 搜索建议 -->
-    <div id="search-suggestions" class="mt-1 text-xs text-gray-600">
-      热门搜索: 
-      <span class="inline-flex flex-wrap gap-1 mt-0.5">
-        <button class="search-suggestion-btn bg-gray-100 hover:bg-nature-main hover:text-white px-2 py-0.5 rounded-full text-xs transition-colors duration-200" data-search="草原">草原</button>
-        <button class="search-suggestion-btn bg-gray-100 hover:bg-nature-main hover:text-white px-2 py-0.5 rounded-full text-xs transition-colors duration-200" data-search="高山">高山</button>
-        <button class="search-suggestion-btn bg-gray-100 hover:bg-nature-main hover:text-white px-2 py-0.5 rounded-full text-xs transition-colors duration-200" data-search="湖泊">湖泊</button>
-        <button class="search-suggestion-btn bg-gray-100 hover:bg-nature-main hover:text-white px-2 py-0.5 rounded-full text-xs transition-colors duration-200" data-search="日出">日出</button>
-        <button class="search-suggestion-btn bg-gray-100 hover:bg-nature-main hover:text-white px-2 py-0.5 rounded-full text-xs transition-colors duration-200" data-search="自然风光">自然风光</button>
-      </span>
-    </div>
+        <!-- 缩小的搜索栏模块 -->
+            <div class="search-mini">
+                <div class="flex flex-col md:flex-row items-center justify-between gap-2">
+                    <!-- 搜索引擎选择器 -->
+                    <div class="engine-selector">
+                        <div class="engine-selected" id="engine-selected">
+                            <div class="flex items-center">
+                                <div class="engine-icon" id="selected-engine-icon"></div>
+                                <span id="selected-engine-name">本地</span>
+                            </div>
+                            <svg class="engine-toggle" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </div>
+                        <div class="engine-options" id="engine-options">
+                            <div class="engine-option active" data-engine="local" data-icon="local">
+                                <div class="engine-icon local-icon"></div>
+                                <span class="engine-name">本地</span>
+                                <span class="engine-check">✓</span>
+                            </div>
+                            <div class="engine-option" data-engine="360" data-icon="360">
+                                <div class="engine-icon _360-icon"></div>
+                                <span class="engine-name">360</span>
+                                <span class="engine-check"></span>
+                            </div>
+                            <div class="engine-option" data-engine="baidu" data-icon="baidu">
+                                <div class="engine-icon baidu-icon"></div>
+                                <span class="engine-name">百度</span>
+                                </span>
+                                <span class="engine-check"></span>
+                            </div>
+                            <div class="engine-option" data-engine="bing" data-icon="bing">
+                                <div class="engine-icon bing-icon"></div>
+                                <span class="engine-name">必应</span>
+                                <span class="engine-check"></span>
+                            </div>
+                            <div class="engine-option" data-engine="google" data-icon="google">
+                                <div class="engine-icon google-icon"></div>
+                                <span class="engine-name">谷歌</span>
+                                <span class="engine-check"></span>
+                            </div>
+                            <div class="engine-option" data-engine="doubao" data-icon="doubao">
+                                <div class="engine-icon doubao-icon"></div>
+                                <span class="engine-name">豆包Ai</span>
+                                <span class="engine-check"></span>
+                            </div>
+                            <div class="engine-option" data-engine="qianwen" data-icon="qianwen">
+                                <div class="engine-icon qianwen-icon"></div>
+                                <span class="engine-name">千问Ai</span>
+                                <span class="engine-check"></span>
+                            </div>
+                            <div class="engine-option" data-engine="douyin" data-icon="douyin">
+                                <div class="engine-icon douyin-icon"></div>
+                                <span class="engine-name">抖音记录美好生活</span>
+                                <span class="engine-check"></span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="w-full md:flex-1 relative">
+                        <input 
+                            type="text" 
+                            id="search-input" 
+                            placeholder="搜索自然美景、资讯、视频..." 
+                            class="w-full border border-nature-main rounded-lg focus:outline-none focus:ring-2 focus:ring-nature-main focus:border-transparent"
+                        >
+                        <div class="absolute left-3 top-2 text-nature-main">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                            </svg>
+                        </div>
+                        <button 
+                            id="clear-search" 
+                            class="absolute right-24 top-2 text-gray-400 hover:text-gray-600 hidden"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="flex gap-1 w-full md:w-auto">
+                        <button 
+                            id="search-button" 
+                            class="bg-nature-main text-white rounded-lg hover:bg-nature-dark transition-colors duration-300 font-medium flex items-center gap-1 justify-center w-full md:w-auto"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                            </svg>
+                            搜索
+                        </button>
+                      
+                    </div>
+                </div>
+                
+                <!-- 搜索框安全标识 -->
+<div class="absolute right-40 top-2 text-nature-main">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+    </svg>
   </div>
-
-</div>
-
+                <!-- 搜索结果区域 -->
+                <div id="search-results" class="mt-2 hidden z-10 relative">
+                    <div class="bg-white rounded-lg shadow-md p-3 w-full">
+                        <div class="flex justify-between items-center mb-2">
+                            <h3 class="text-sm font-bold text-nature-dark">搜索结果</h3>
+                            <span id="result-count" class="text-xs text-gray-500"></span>
+                        </div>
+                        <div id="results-container" class="space-y-2 max-h-60 overflow-y-auto pr-1 text-sm">
+                            <!-- 搜索结果会动态插入到这里 -->
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 搜索建议 -->
+                <div id="search-suggestions" class="mt-1 text-xs text-gray-600">
+                    热门搜索: 
+                    <span class="inline-flex flex-wrap gap-1 mt-0.5">
+                        <button class="search-suggestion-btn bg-gray-100 hover:bg-nature-main hover:text-white px-2 py-0.5 rounded-full text-xs transition-colors duration-200" data-search="草原">草原</button>
+                        <button class="search-suggestion-btn bg-gray-100 hover:bg-nature-main hover:text-white px-2 py-0.5 rounded-full text-xs transition-colors duration-200" data-search="高山">高山</button>
+                        <button class="search-suggestion-btn bg-gray-100 hover:bg-nature-main hover:text-white px-2 py-0.5 rounded-full text-xs transition-colors duration-200" data-search="湖泊">湖泊</button>
+                        <button class="search-suggestion-btn bg-gray-100 hover:bg-nature-main hover:text-white px-2 py-0.5 rounded-full text-xs transition-colors duration-200" data-search="日出">日出</button>
+                        <button class="search-suggestion-btn bg-gray-100 hover:bg-nature-main hover:text-white px-2 py-0.5 rounded-full text-xs transition-colors duration-200" data-search="自然风光">自然风光</button>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- 铺满顶部的选项菜单栏 -->
     <div class="full-width-nav bg-white shadow-md border-b border-nature-light">
         <div class="container mx-auto px-4">
@@ -601,7 +598,7 @@
             <label class="block text-sm font-medium text-gray-700 mb-1">问题描述（必填）</label>
             <textarea class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-red-500 h-24" placeholder="请描述具体问题，如弹窗频繁、内容违规等..." required></textarea>
           </div>
-<!-- 证据上传 -->
+          <!-- 证据上传 -->
           <div class="mb-4">
             <label class="block text-sm font-medium text-gray-700 mb-1">上传证据（可选）</label>
             <input type="file" class="w-full border border-gray-300 rounded-lg p-2" accept="image/*,video/*">
